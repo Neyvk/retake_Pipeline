@@ -38,9 +38,8 @@ jobs:
 
       - name: Download SonarCloud Report (JSON)
         run: |
-          curl -u ${{ secrets.SONAR_TOKEN }}: \
-            "https://sonarcloud.io/api/project_analyses/search?project=Neyvk_retake_Pipeline" \
-            -o sonar_report.json
+          curl -u $SONAR_TOKEN: "https://sonarcloud.io/api/measures/component?component=Neyvk_retake_Pipeline&metricKeys=bugs,vulnerabilities,code_smells,coverage,duplicated_lines_density" -o sonar_metrics.json
+      
       - name: Upload Sonar report
         uses: actions/upload-artifact@v4
         with:
