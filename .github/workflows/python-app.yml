@@ -32,7 +32,7 @@ jobs:
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
       - name: SonarQube Scan
-        uses: SonarSource/sonarqube-scan-action@v5
+        uses: SonarSource/sonarqube-scan-action@v6
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
@@ -41,6 +41,11 @@ jobs:
           curl -u ${{ secrets.SONAR_TOKEN }}: \
             "https://sonarcloud.io/api/project_analyses/search?project=Neyvk_retake_Pipeline" \
             -o sonar_report.json
+      - name: Upload Sonar report
+        uses: actions/upload-artifact@v4
+        with:
+          name: sonar-report
+          path: sonar_report.json
 
       - name: Send Telegram notification
         run: python send_notification.py
