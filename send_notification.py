@@ -1,27 +1,6 @@
 import os
 import telebot
 from datetime import datetime
-a = 23
-b = 3131
-c = 0
-a + b = c
-q = 1
-w =2
-c=3
-e=4
-r=5
-t=6
-y=7
-u=8
-i=9
-o=0
-a=13
-s=14
-f=15
-h=17
-k=18
-l=120
-fg=313
 bot_token = os.environ.get("BOT_TOKEN")
 chat_id = os.environ.get("CHAT_ID")
 

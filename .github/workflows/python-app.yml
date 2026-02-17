@@ -36,26 +36,24 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-      - name: Download SonarCloud Report (JSON)
+      - name: Download SonarCloud Metrics
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-          curl -u $SONAR_TOKEN: "https://sonarcloud.io/api/measures/component?component=Neyvk_retake_Pipeline&metricKeys=bugs,vulnerabilities,code_smells,coverage,duplicated_lines_density" -o sonar_metrics.json
-      
+          curl -u $SONAR_TOKEN: \
+          "https://sonarcloud.io/api/measures/component?component=Neyvk_retake_Pipeline&metricKeys=bugs,vulnerabilities,code_smells,coverage,duplicated_lines_density" \
+          -o sonar_metrics.json
+
       - name: Upload Sonar report
         uses: actions/upload-artifact@v4
         with:
           name: sonar-report
-          path: sonar_report.json
+          path: sonar_metrics.json
 
       - name: Send Telegram notification
         run: python send_notification.py
         env:
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
           CHAT_ID: ${{ secrets.CHAT_ID }}
-
           GITHUB_REPOSITORY: ${{ github.repository }}
-          PR_TITLE: ${{ github.event.pull_request.title }}
-          PR_SOURCE_BRANCH: ${{ github.event.pull_request.head.ref }}
-          PR_TARGET_BRANCH: ${{ github.event.pull_request.base.ref }}
-          PR_URL: ${{ github.event.pull_request.html_url }}
-          PR_MERGED_AT: ${{ github.event.pull_request.merged_at }}
           RELEASE_TAG: ${{ github.ref_name }}
