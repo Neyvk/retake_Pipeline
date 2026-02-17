@@ -29,7 +29,7 @@ jobs:
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
     - name: SonarQube Scan
-      uses: sonarsource/sonarcloud-github-action@<action version>
+      uses: sonarsource/sonarcloud-github-action@v2.3.1
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
