@@ -1,13 +1,15 @@
 name: PipeLine
 
 on:
-  [push]
+  pull_request:
+    types: [closed]
 
 permissions:
   contents: read
 
 jobs:
   code-check:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
 
     steps:
@@ -38,19 +40,20 @@ jobs:
 
       - name: Download SonarCloud Report (JSON)
         run: |
-          curl -u ${{ secrets.SONAR_TOKEN }}: "https://sonarcloud.io/api/project_analyses/search?project=Neyvk_retake_Pipeline" -o sonar_report.json
-            
+          curl -u ${{ secrets.SONAR_TOKEN }}: \
+            "https://sonarcloud.io/api/project_analyses/search?project=Neyvk_retake_Pipeline" \
+            -o sonar_report.json
+
       - name: Send Telegram notification
-        if: github.event.pull_request.merged == true
         run: python send_notification.py
         env:
-        BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
-        CHAT_ID: ${{ secrets.CHAT_ID }}
+          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+          CHAT_ID: ${{ secrets.CHAT_ID }}
 
-        GITHUB_REPOSITORY: ${{ github.repository }}
-        PR_TITLE: ${{ github.event.pull_request.title }}
-        PR_SOURCE_BRANCH: ${{ github.event.pull_request.head.ref }}
-        PR_TARGET_BRANCH: ${{ github.event.pull_request.base.ref }}
-        PR_URL: ${{ github.event.pull_request.html_url }}
-        PR_MERGED_AT: ${{ github.event.pull_request.merged_at }}
-        RELEASE_TAG: ${{ github.ref_name }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_SOURCE_BRANCH: ${{ github.event.pull_request.head.ref }}
+          PR_TARGET_BRANCH: ${{ github.event.pull_request.base.ref }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          PR_MERGED_AT: ${{ github.event.pull_request.merged_at }}
+          RELEASE_TAG: ${{ github.ref_name }}
